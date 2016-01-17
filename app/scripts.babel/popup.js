@@ -1,10 +1,12 @@
-var Comp = React.createClass({
+'use strict';
+
+var Comp = React.createClass({ // eslint-disable-line
 	getInitialState() {
 		return { counter: 1 };
 	},
 
 	onClick() {
-		this.setState({counter: this.state.counter +1});
+		this.setState({counter: this.state.counter + 1});
 	},
 
 	render() {
@@ -12,4 +14,4 @@ var Comp = React.createClass({
 	}
 });
 
-ReactDOM.render(<Comp/>, document.body);
+ReactDOM.render(<Comp/>, document.body); // eslint-disable-line
