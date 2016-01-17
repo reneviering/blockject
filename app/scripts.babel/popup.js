@@ -1,16 +1,35 @@
 'use strict';
 
-var Comp = React.createClass({ // eslint-disable-line
-	getInitialState() {
-		return { counter: 1 };
+var Comp = React.createClass({	// eslint-disable-line
+	onActivate() {
+		var action = {
+			type: 'activateExtension'
+		};
+
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, action, function() {});
+		});
+
+		chrome.runtime.sendMessage(action, function() {});
 	},
 
-	onClick() {
-		this.setState({counter: this.state.counter + 1});
+	onDeactivate() {
+		var action = {
+			type: 'deactivateExtension'
+		};
+
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, action, function() {});
+		});
+
+		chrome.runtime.sendMessage(action, function() {});
 	},
 
 	render() {
-		return <div onClick={this.onClick}>Hello Chrome Extension! {this.state.counter}</div>;
+		return <div>
+			<button onClick={this.onActivate}>Activate</button>
+			<button onClick={this.onDeactivate}>Deactivate</button>
+		</div>;
 	}
 });
 

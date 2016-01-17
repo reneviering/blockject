@@ -1,28 +1,44 @@
 'use strict';
 
 chrome.runtime.onInstalled.addListener(details => {
-  console.log('previousVersion', details.previousVersion);
+    console.log('previousVersion', details.previousVersion);
 });
 
 
 const blackList = [
-'http://codemade.js.org/caffeine/dist/bundle.js',
-'http://codemade.js.org/caffeine/dist/main.css'
+    'http://codemade.js.org/caffeine/dist/bundle.js',
+    'http://codemade.js.org/caffeine/dist/main.css'
 ];
 
-const blockIt = true;
+const blockIt = JSON.parse(localStorage['activated']); // eslint-disable-line dot-notation
 
 chrome.webRequest.onBeforeRequest.addListener(() => {
-	return {
-		cancel: blockIt
-	};
-},
-{
-	urls: blackList,
-	types: ['script', 'stylesheet']
-},
-['blocking']);
+    return {
+        cancel: blockIt
+    };
+}, {
+    urls: blackList,
+    types: ['script', 'stylesheet']
+}, ['blocking']);
 
-// chrome.browserAction.setBadgeText({text: '\'blockject'});
 
-console.log('\'Allo \'Allo! Event Page for Browser Action');
+const activateExtension = () => {
+	localStorage['activated'] = true; // eslint-disable-line dot-notation
+	chrome.runtime.reload();
+};
+
+const deactivateExtension = () => {
+	localStorage['activated'] = false; // eslint-disable-line dot-notation
+	chrome.runtime.reload();
+};
+
+chrome.runtime.onMessage.addListener(function(request) {
+	switch(request.type) {
+		case 'activateExtension':
+			activateExtension();
+		break;
+		case 'deactivateExtension':
+			deactivateExtension();
+		break;
+	}
+});

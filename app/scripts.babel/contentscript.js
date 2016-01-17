@@ -7,7 +7,23 @@ var scriptSource = [
     'http://localhost:3000/file1.js'
 ];
 
-const inject = () => {
+
+chrome.runtime.onMessage.addListener(function(request) {
+ switch(request.type) {
+     case 'activateExtension':
+         localStorage['activated'] = true; // eslint-disable-line dot-notation
+     break;
+     case 'deactivateExtension':
+         localStorage['activated'] = false; // eslint-disable-line dot-notation
+     break;
+ }
+});
+
+
+const inject = (isActive) => {
+    if(!isActive) {
+        return;
+    }
 
     const makeScriptUrlsGlobalAvailable = () => {
         var concatenatedScripts1 = scriptSource.join(',');
@@ -74,7 +90,7 @@ const inject = () => {
     makeScriptUrlsGlobalAvailable();
     injectScripts();
 
-
 };
 
-inject();
+inject(JSON.parse(localStorage['activated'])); // eslint-disable-line dot-notation
+
