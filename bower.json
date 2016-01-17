@@ -1,0 +1,12 @@
+{
+  "name": "blockject",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "react": "~0.14.6"
+  },
+  "devDependencies": {
+    "chai": "~3.4.2",
+    "mocha": "~2.3.4"
+  }
+}
