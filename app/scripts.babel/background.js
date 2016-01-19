@@ -5,14 +5,25 @@ chrome.runtime.onInstalled.addListener(details => {
 });
 
 
-const blackList = [
-    'http://codemade.js.org/caffeine/dist/bundle.js',
-    'http://codemade.js.org/caffeine/dist/main.css'
-];
+// const blackList = [
+//     'http://codemade.js.org/caffeine/dist/bundle.js',
+//     'http://codemade.js.org/caffeine/dist/main.css'
+// ];
+
+var blackList = [];
+if(typeof localStorage['blockjectData'] !== 'undefined') { // eslint-disable-line dot-notation
+    blackList = JSON.parse(localStorage['blockjectData']).blockUrls; // eslint-disable-line dot-notation
+
+}
+
 
 const blockIt = JSON.parse(localStorage['activated']); // eslint-disable-line dot-notation
 
 chrome.webRequest.onBeforeRequest.addListener(() => {
+	if(blackList.length === 0)
+	{
+		return {cancel: false};
+	}
     return {
         cancel: blockIt
     };
@@ -39,6 +50,9 @@ chrome.runtime.onMessage.addListener(function(request) {
 		break;
 		case 'deactivateExtension':
 			deactivateExtension();
+		break;
+		case 'updateData':
+			localStorage['blockjectData'] = request.data; // eslint-disable-line dot-notation
 		break;
 	}
 });

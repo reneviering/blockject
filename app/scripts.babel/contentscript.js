@@ -1,11 +1,16 @@
 'use strict';
 
-var scriptSource = [
-    'http://localhost:3001/dist/bundle.js',
-    'http://localhost:3001/dist/main.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js',
-    'http://localhost:3000/file1.js'
-];
+// var scriptSource = [
+//     'http://localhost:3000/dist/bundle.js',
+//     'http://localhost:3000/dist/main.css',
+//     'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js',
+//     'http://localhost:3000/file1.js'
+// ];
+var scriptSource = null;
+if(typeof localStorage['blockjectData'] !== 'undefined') { // eslint-disable-line dot-notation
+    scriptSource = JSON.parse(localStorage['blockjectData']).injectUrls; // eslint-disable-line dot-notation
+
+}
 
 
 chrome.runtime.onMessage.addListener(function(request) {
@@ -16,12 +21,20 @@ chrome.runtime.onMessage.addListener(function(request) {
      case 'deactivateExtension':
          localStorage['activated'] = false; // eslint-disable-line dot-notation
      break;
+     case 'updateData':
+        localStorage['blockjectData'] = request.data; // eslint-disable-line dot-notation
+     break;
  }
 });
 
 
 const inject = (isActive) => {
     if(!isActive) {
+        return;
+    }
+
+    if(scriptSource === null || scriptSource.length === 0)
+    {
         return;
     }
 

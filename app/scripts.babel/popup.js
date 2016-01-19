@@ -1,12 +1,30 @@
 'use strict';
 
 var Comp = React.createClass({	// eslint-disable-line
-
 	getInitialState() {
 		return {
-			blockUrls: ['react.js', 'blub'],
+			blockUrls: [],
 			injectUrls: []
 		};
+	},
+	componentDidMount() {
+		if(typeof localStorage['blockjectData'] !== 'undefined') { // eslint-disable-line dot-notation
+			var stateFromLocalStorage = JSON.parse(localStorage['blockjectData']); // eslint-disable-line dot-notation
+			this.setState(stateFromLocalStorage);
+		}
+	},
+
+	saveState(state) {
+		var action = {
+			type: 'updateData',
+			data: JSON.stringify(state)
+		};
+
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, action, function() {});
+		});
+
+		chrome.runtime.sendMessage(action, function() {});
 	},
 
 	onActivate() {
@@ -34,31 +52,43 @@ var Comp = React.createClass({	// eslint-disable-line
 	},
 
 	onAddNewBlockUrl() {
-		this.setState({
+		var newState = {
 			blockUrls: [...this.state.blockUrls, this.refs.newBlockUrl.value],
 			injectUrls: [...this.state.injectUrls]
-		});
+		};
+		this.setState(newState);
+		this.saveState(newState);
 	},
 
 	onAddNewInjectUrl() {
-		this.setState({
+		var newState = {
 			blockUrls: [...this.state.blockUrls],
 			injectUrls: [...this.state.injectUrls, this.refs.newInjectUrl.value]
-		});
+		};
+		this.setState(newState);
+		this.saveState(newState);
 	},
 
 	onDeleteBlockUrl(url) {
-		this.setState({
+		var newState = {
 			blockUrls: this.state.blockUrls.filter(blockUrl => url !== blockUrl),
 			injectUrls: [...this.state.injectUrls]
-		});
+		};
+		this.setState(newState);
+		this.saveState(newState);
 	},
 
 	onDeleteInjectUrl(url) {
-		this.setState({
+		var newState = {
 			blockUrls: [...this.state.blockUrls],
 			injectUrls: this.state.injectUrls.filter(injectUrl => url !== injectUrl)
-		});
+		};
+		this.setState(newState);
+		this.saveState(newState);
+	},
+
+	onSaveChanges() {
+		chrome.runtime.reload();
 	},
 
 	render() {
@@ -88,6 +118,10 @@ var Comp = React.createClass({	// eslint-disable-line
 
 			<input type="text" ref="newInjectUrl" />
 			<button onClick={this.onAddNewInjectUrl}>Add</button>
+
+			<div>
+				<button onClick={this.onSaveChanges}>Save changes</button>
+			</div>
 		</div>;
 	}
 });
