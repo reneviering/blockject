@@ -46,10 +46,15 @@
     }
   ],
   "permissions": [
+    "tabs",
+    "http://*/*",
+    "https://*/*",
+    "background",
     "clipboardRead",
     "clipboardWrite",
     "commands",
     "contentSettings",
+    "idle",
     "contextMenus",
     "debugger",
     "declarativeContent",
@@ -58,6 +63,7 @@
     "pageCapture",
     "proxy",
     "webNavigation",
+    "storage",
     "webRequest",
     "webRequestBlocking"
   ]
