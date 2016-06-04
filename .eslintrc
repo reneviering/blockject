@@ -1,5 +1,18 @@
 {
+  "env": {
+    "browser": true,
+    "es6": true,
+  },
   "ecmaFeatures": {
-   "jsx": true
-   }
+    "jsx": true,
+    "modules": true
+  },
+  "globals": {
+    "chrome": true,
+    "crypto": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "strict": 0
+  }
 }
