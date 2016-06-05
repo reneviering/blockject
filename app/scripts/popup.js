@@ -62,5 +62,5 @@ chrome.storage.sync.get(data => {
   store.dispatch({
     type: 'RECEIVE_WEBREQUESTS',
     data: data.webRequests
-  })
+  });
 });
