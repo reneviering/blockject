@@ -54,6 +54,7 @@
   "dependencies": {
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
-    "redux": "^3.5.2"
+    "redux": "^3.5.2",
+    "rx": "^4.1.0"
   }
 }
