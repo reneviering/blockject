@@ -1,24 +1,15 @@
 'use strict';
 
 chrome.runtime.onInstalled.addListener(details => {
-    console.log('previousVersion', details.previousVersion);
+  console.log('previousVersion', details.previousVersion);
 });
 
+const blackList = [
+'http://rene.js.org/css/main.css'
+];
 
-// const blackList = [
-//     'http://codemade.js.org/caffeine/dist/bundle.js',
-//     'http://codemade.js.org/caffeine/dist/main.css'
-// ];
-
-var blackList = [];
-if(typeof localStorage['blockjectData'] !== 'undefined') { // eslint-disable-line dot-notation
-    blackList = JSON.parse(localStorage['blockjectData']).blockUrls; // eslint-disable-line dot-notation
-
-}
-
-
-const blockIt = JSON.parse(localStorage['activated']); // eslint-disable-line dot-notation
-
+//const blockIt = JSON.parse(localStorage['activated']); // eslint-disable-line dot-notation
+let blockIt = true;
 chrome.webRequest.onBeforeRequest.addListener(() => {
 	if(blackList.length === 0)
 	{
